@@ -4,5 +4,7 @@ mod editer;
 
 fn main() {
     let mut editor = Editor::default();
-    editor.run();
+    if let Err(e) = editor.run() {
+        println!("Editore error: {e}");
+    }
 }

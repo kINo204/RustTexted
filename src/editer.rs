@@ -12,15 +12,16 @@ impl Default for Editor {
 }
 
 impl Editor {
-    pub fn run(&mut self) {
-        terminal::enable_raw_mode().expect("Crossterm: terminal enter_raw_mode failed!");
+    pub fn run(&mut self) -> Result<()> {
+        terminal::enable_raw_mode()?;
 
         /* main loop */
         while self.running {
-            self.poll_events().expect("Error occured in poll_events.");
+            self.poll_events()?;
         }
-        
-        terminal::disable_raw_mode().expect("Crossterm: terminal disable_raw_mode failed!");
+
+        terminal::disable_raw_mode()?;
+        Ok(())
     }
 
     fn terminate(&mut self) {
