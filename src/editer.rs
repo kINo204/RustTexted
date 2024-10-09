@@ -1,4 +1,4 @@
-use crossterm::{event::{self, Event::*, KeyCode::*, KeyEvent, KeyEventKind}, terminal};
+use crossterm::{event::{self, Event::*, KeyCode::*, KeyEvent, KeyEventKind, KeyModifiers}, terminal};
 use std::io::Result;
 
 pub struct Editor {
@@ -37,32 +37,25 @@ impl Editor {
     }
 
     fn process_key_events(&mut self, key_event: KeyEvent) -> Result<()> {
+        let KeyEvent { code, modifiers, kind, state } = key_event;
+
         // Process key events on pressed down for now.
-        match key_event.kind != KeyEventKind::Press {
+        match kind != KeyEventKind::Press {
             true => return Ok(()),
             false => (),
         }
 
-        let key_code = key_event.code;
-        match key_code {
-
+        match code {
             // plain charactors
             Char(ch) => {
+                if ch == 'q' && modifiers == KeyModifiers::CONTROL {
+                    self.terminate();
+                    return Ok(());
+                }
                 let bi = ch as u8;
                 println!("Binary: {bi:08b} ASCII: {bi:#03} Character: {ch:#?}\r");
-                if ch == 'q' {
-                    self.terminate();
-                }
                 Ok(())
             }
-
-            // modifiers
-            Modifier(mkey_code) => {
-                match mkey_code {
-                    _ => Ok(())
-                }
-            }
-            
             _ => Ok(())
         }
     }
