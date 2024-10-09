@@ -3,7 +3,7 @@ use std::io::Result;
 
 use super::Editor;
 
-pub fn next(ed: &mut Editor) -> Result<()> {
+pub fn next_event(ed: &mut Editor) -> Result<()> {
     let event = event::read()?;
     match event {
         Event::Key(key_event) => process_key_event(ed, key_event),

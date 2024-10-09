@@ -24,14 +24,14 @@ impl Editor {
 
         /* main loop */
         while self.running {
-            ed_events::next(self)?;
+            ed_events::next_event(self)?;
         }
 
         self.term.exit()?;
         Ok(())
     }
 
-    fn terminate(&mut self) {
+    pub fn terminate(&mut self) {
         self.running = false;
     }
 }
