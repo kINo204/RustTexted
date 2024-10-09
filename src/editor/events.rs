@@ -32,8 +32,8 @@ fn process_key_event(ed: &mut Editor, key_event: KeyEvent) -> Result<()> {
                 ed.terminate();
                 return Ok(());
             }
-            let bi = ch as u8;
-            println!("Binary: {bi:08b} ASCII: {bi:#03} Character: {ch:#?}\r");
+            // let bi = ch as u8;
+            // println!("Binary: {bi:08b} ASCII: {bi:#03} Character: {ch:#?}\r");
             Ok(())
         }
         _ => Ok(())
