@@ -1,9 +1,9 @@
-use editer::Editor;
+use editor::Editor;
 
-mod editer;
+mod editor;
 
 fn main() {
-    let mut editor = Editor::default();
+    let mut editor = Editor::new();
     if let Err(e) = editor.run() {
         println!("Editore error: {e}");
     }
