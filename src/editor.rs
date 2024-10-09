@@ -1,19 +1,21 @@
-use crossterm::event::{self, Event::*, KeyCode::*, KeyEvent, KeyEventKind, KeyModifiers};
-use term::Term;
+mod term;
+mod events;
+
+use term as ed_terminal;
+use events as ed_events;
+
 use std::io::Result;
 
 pub struct Editor {
     running: bool,
-    term: term::Term,
+    term: ed_terminal::Term,
 }
-
-mod term;
 
 impl Editor {
     pub fn new() -> Self {
         Self {
             running: true,
-            term: Term::new(),
+            term: ed_terminal::Term::new(),
         }
     }
 
@@ -22,7 +24,7 @@ impl Editor {
 
         /* main loop */
         while self.running {
-            self.process_event()?;
+            ed_events::next(self)?;
         }
 
         self.term.exit()?;
@@ -31,37 +33,5 @@ impl Editor {
 
     fn terminate(&mut self) {
         self.running = false;
-    }
-
-    fn process_event(&mut self) -> Result<()> {
-        let event = event::read()?;
-        match event {
-            Key(key_event) => self.process_key_event(key_event),
-            _ => Ok(())
-        }
-    }
-
-    fn process_key_event(&mut self, key_event: KeyEvent) -> Result<()> {
-        let KeyEvent { code, modifiers, kind, state } = key_event;
-
-        // Process key events on pressed down for now.
-        match kind != KeyEventKind::Press {
-            true => return Ok(()),
-            false => (),
-        }
-
-        match code {
-            // plain charactors
-            Char(ch) => {
-                if ch == 'q' && modifiers == KeyModifiers::CONTROL {
-                    self.terminate();
-                    return Ok(());
-                }
-                let bi = ch as u8;
-                println!("Binary: {bi:08b} ASCII: {bi:#03} Character: {ch:#?}\r");
-                Ok(())
-            }
-            _ => Ok(())
-        }
     }
 }
